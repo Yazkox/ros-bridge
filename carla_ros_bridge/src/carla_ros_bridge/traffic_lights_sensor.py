@@ -47,6 +47,7 @@ class TrafficLightsSensor(PseudoActor):
 
         self.actor_list = actor_list
         self.traffic_light_status = CarlaTrafficLightStatusList()
+        self.traffic_light_info = CarlaTrafficLightInfoList()
         self.traffic_light_actors = []
 
         self.traffic_lights_info_publisher = node.new_publisher(
@@ -81,19 +82,21 @@ class TrafficLightsSensor(PseudoActor):
         Get the state of all known traffic lights
         """
         traffic_light_status = CarlaTrafficLightStatusList()
+        traffic_light_info = CarlaTrafficLightInfoList()
         traffic_light_actors = []
         for actor_id in self.actor_list:
             actor = self.actor_list[actor_id]
             if isinstance(actor, TrafficLight):
                 traffic_light_actors.append(actor)
                 traffic_light_status.traffic_lights.append(actor.get_status())
+                traffic_light_info.traffic_lights.append(actor.get_info())
 
         if traffic_light_actors != self.traffic_light_actors:
             self.traffic_light_actors = traffic_light_actors
-            traffic_light_info_list = CarlaTrafficLightInfoList()
-            for traffic_light in traffic_light_actors:
-                traffic_light_info_list.traffic_lights.append(traffic_light.get_info())
-            self.traffic_lights_info_publisher.publish(traffic_light_info_list)
+            
+        if traffic_light_info != self.traffic_light_info:
+            self.traffic_light_info = traffic_light_info
+            self.traffic_lights_info_publisher.publish(traffic_light_info)
 
         if traffic_light_status != self.traffic_light_status:
             self.traffic_light_status = traffic_light_status
