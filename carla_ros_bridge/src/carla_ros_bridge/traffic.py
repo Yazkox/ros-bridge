@@ -91,6 +91,7 @@ class TrafficLight(Actor):
             status.state = CarlaTrafficLightStatus.OFF
         else:
             status.state = CarlaTrafficLightStatus.UNKNOWN
+        status.elapsed_time = self.carla_actor.get_elapsed_time()
         return status
 
     def get_info(self):
@@ -105,4 +106,7 @@ class TrafficLight(Actor):
         info.trigger_volume.size.x = self.carla_actor.trigger_volume.extent.x * 2.0
         info.trigger_volume.size.y = self.carla_actor.trigger_volume.extent.y * 2.0
         info.trigger_volume.size.z = self.carla_actor.trigger_volume.extent.z * 2.0
+        info.green_time = self.carla_actor.get_green_time()
+        info.yellow_time = self.carla_actor.get_yellow_time()
+        info.red_time = self.carla_actor.get_red_time()
         return info
